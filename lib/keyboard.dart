@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:wallet_app/utils.dart';
 
-typedef KeyboardTapCallback = void Function(String text);
+
+typedef KeyboardTapCallback = void Function(int text);
 
 class KeyboardUIConfig {
-  final double digitSize;
+  final double digitHeight;
+  final double digitWidth;
   final double digitBorderWidth;
   final TextStyle digitTextStyle;
   final TextStyle deleteButtonTextStyle;
@@ -13,7 +16,8 @@ class KeyboardUIConfig {
   final EdgeInsetsGeometry deleteButtonMargin;
 
   KeyboardUIConfig({
-    this.digitSize = 80,
+    this.digitHeight,
+    this.digitWidth,
     this.digitBorderWidth = 1,
     this.keyboardRowMargin = const EdgeInsets.only(top: 15),
     this.primaryColor = Colors.white,
@@ -49,47 +53,59 @@ class Keyboard extends StatelessWidget {
 
   Widget _buildKeyboard() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            _buildKeyboardDigit('1'),
-            _buildKeyboardDigit('2'),
-            _buildKeyboardDigit('3'),
+            _buildKeyboardDigit(Utils.convertNumberToLocalizedText(1, 0) , 1),
+            _buildKeyboardDigit(Utils.convertNumberToLocalizedText(2, 0) , 2),
+            _buildKeyboardDigit(Utils.convertNumberToLocalizedText(3, 0) , 3),
           ],
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            _buildKeyboardDigit('4'),
-            _buildKeyboardDigit('5'),
-            _buildKeyboardDigit('6'),
+            _buildKeyboardDigit(Utils.convertNumberToLocalizedText(4, 0) , 4),
+            _buildKeyboardDigit(Utils.convertNumberToLocalizedText(5, 0) , 5),
+            _buildKeyboardDigit(Utils.convertNumberToLocalizedText(6, 0) , 6),
           ],
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            _buildKeyboardDigit('7'),
-            _buildKeyboardDigit('8'),
-            _buildKeyboardDigit('9'),
+            _buildKeyboardDigit(Utils.convertNumberToLocalizedText(7, 0), 7),
+            _buildKeyboardDigit(Utils.convertNumberToLocalizedText(8, 0), 8),
+            _buildKeyboardDigit(Utils.convertNumberToLocalizedText(9, 0), 9),
           ],
         ),
-        Stack(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Center(child: _buildKeyboardDigit('0')),
-            Align(alignment: Alignment.topRight, child: _buildDeleteButton())
+            dummyKey(),
+            _buildKeyboardDigit(Utils.convertNumberToLocalizedText(0, 0), 0),
+            _buildDeleteButton(),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildKeyboardDigit(String text) {
+  Widget dummyKey() {
     return Container(
-      margin: keyboardUIConfig.keyboardRowMargin,
-      width: keyboardUIConfig.digitSize,
-      height: keyboardUIConfig.digitSize,
+      width: keyboardUIConfig.digitWidth,
+      height: keyboardUIConfig.digitHeight,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8.0),
+        color: Colors.transparent,
+      ),
+    );
+  }
+
+  Widget _buildKeyboardDigit(String text, int value) {
+    return Container(
+      width: keyboardUIConfig.digitWidth,
+      height: keyboardUIConfig.digitHeight,
       child: ClipOval(
         child: Material(
           color: keyboardUIConfig.digitFillColor,
@@ -97,7 +113,7 @@ class Keyboard extends StatelessWidget {
             highlightColor: keyboardUIConfig.primaryColor,
             splashColor: keyboardUIConfig.primaryColor.withOpacity(0.4),
             onTap: () {
-              onKeyboardTap(text);
+              onKeyboardTap(value);
             },
             child: Center(
               child: Text(
@@ -109,35 +125,35 @@ class Keyboard extends StatelessWidget {
         ),
       ),
       decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-            color: keyboardUIConfig.primaryColor,
-            width: keyboardUIConfig.digitBorderWidth),
+        borderRadius: BorderRadius.circular(8.0),
+        color: keyboardUIConfig.primaryColor,
       ),
     );
   }
 
   Widget _buildDeleteButton() {
     return Container(
-      margin: keyboardUIConfig.deleteButtonMargin,
-      height: keyboardUIConfig.digitSize,
-      width: keyboardUIConfig.digitSize,
-      child: ClipOval(
-        child: Material(
-          color: keyboardUIConfig.digitFillColor,
-          child: InkWell(
-            highlightColor: keyboardUIConfig.primaryColor,
-            splashColor: keyboardUIConfig.primaryColor.withOpacity(0.4),
-            onTap: onDeleteCancelTap,
-            child: Center(
-              child: Text(
-                shouldShowCancel ? cancelLocalizedText : deleteLocalizedText,
-                style: keyboardUIConfig.deleteButtonTextStyle,
-              ),
+      height: keyboardUIConfig.digitHeight,
+      width: keyboardUIConfig.digitWidth,
+      child: Material(
+        color: keyboardUIConfig.digitFillColor,
+        child: InkWell(
+          highlightColor: keyboardUIConfig.primaryColor,
+          splashColor: keyboardUIConfig.primaryColor.withOpacity(0.4),
+          onTap: onDeleteCancelTap,
+          child: Center(
+            child: Icon(
+              Icons.backspace,
+              size: keyboardUIConfig.digitHeight / 3,
             ),
           ),
         ),
       ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8.0),
+        color: Colors.transparent,
+      ),
     );
   }
 }
+

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class CircleUIConfig {
   final Color borderColor;
   final Color fillColor;
+  final Color unFilledColor;
   final double borderWidth;
   final double circleSize;
   double extraSize;
@@ -12,6 +13,7 @@ class CircleUIConfig {
       this.borderColor = Colors.white,
       this.borderWidth = 1,
       this.fillColor = Colors.white,
+      this.unFilledColor = Colors.white,
       this.circleSize = 20});
 }
 
@@ -29,7 +31,8 @@ class Circle extends StatelessWidget {
       width: circleUIConfig.circleSize,
       height: circleUIConfig.circleSize,
       decoration: BoxDecoration(
-          color: filled ? circleUIConfig.fillColor : Colors.transparent,
+          color:
+              filled ? circleUIConfig.fillColor : circleUIConfig.unFilledColor,
           shape: BoxShape.circle,
           border: Border.all(
               color: circleUIConfig.borderColor,
@@ -37,3 +40,4 @@ class Circle extends StatelessWidget {
     );
   }
 }
+
